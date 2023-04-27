@@ -10,6 +10,7 @@ var useragent = require("express-useragent");
 const uuid = require('uuid');
 const pinoHttpLogger = require('pino-http')
 const promBundle = require("express-prom-bundle");
+const multer = require('multer');
 const metricsMiddleware = promBundle({
   buckets: [0.01, 0.1, 0.5, 1, 3, 5, 7.5, 10, 12.5, 15, 20, 25, 30, 40, 50, 60],
   includeMethod: true,
@@ -17,7 +18,10 @@ const metricsMiddleware = promBundle({
   includeStatusCode: true,
   promClient: { collectDefaultMetrics: {} }
 });
-
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { files: 1 }
+});
 
 // Local dependencies
 const router = require("./app/router");
@@ -81,6 +85,7 @@ function initialiseGlobalMiddleware(app) {
   });
 
   app.use(express.urlencoded({ limit: "10mb", extended: true }));
+  app.use(upload.single('file'));
   app.use(cors());
   app.use("*", correlationHeader);
   app.use(useragent.express());
