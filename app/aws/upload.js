@@ -40,4 +40,4 @@ const upload = async (req, res) => {
   }
 };
 
-export default upload;
+module.exports = upload;

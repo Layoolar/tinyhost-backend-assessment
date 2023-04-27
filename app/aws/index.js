@@ -1,6 +1,6 @@
 'use strict'
 
-import upload from './upload'
+const upload = require('./upload');
 
 const express = require("express");
 
